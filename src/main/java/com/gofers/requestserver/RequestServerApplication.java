@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.gofers.requestserver.bean.Request;
 import com.gofers.requestserver.dao.RequestJpa;
+import com.gofers.requestserver.service.ResponseService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -60,6 +61,14 @@ public class RequestServerApplication {
 		requestJpa.save(requestEntity);
 
 		return "qwer";
+	}
+
+	@Autowired
+	ResponseService responseService;
+	@RequestMapping("/dopost")
+	public String asdfasdf() {
+		 responseService.doPost();
+		return "xiao";
 	}
 
 
