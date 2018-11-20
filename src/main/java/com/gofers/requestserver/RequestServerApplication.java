@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.gofers.requestserver.bean.Request;
 import com.gofers.requestserver.dao.RequestJpa;
+import com.gofers.requestserver.message.Sender;
 import com.gofers.requestserver.service.ResponseService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,8 @@ public class RequestServerApplication {
 
 	@Autowired
 	RequestJpa requestJpa;
+	@Autowired
+	private Sender sender;
 
 	public static void main(String[] args) {
 		SpringApplication.run(RequestServerApplication.class, args);
@@ -57,8 +60,16 @@ public class RequestServerApplication {
 				.path(request.getServletPath())
 				.requestBody(requestBody)
 				.build();
+		requestEntity=requestJpa.save(requestEntity);
 		System.out.println(requestEntity.toString());
-		requestJpa.save(requestEntity);
+		sender.sendRequest(Request.builder()
+				.method(RequestMethod.POST)
+				.path(requestEntity.getPath())
+				.id(requestEntity.getId())
+				.requestBody(requestEntity.getRequestBody())
+				.build());
+
+
 
 		return "qwer";
 	}
