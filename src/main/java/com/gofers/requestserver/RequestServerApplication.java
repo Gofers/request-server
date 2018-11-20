@@ -49,7 +49,7 @@ public class RequestServerApplication {
 
 	@RequestMapping(method = RequestMethod.POST, path = "/**")
 	public String postRequest( HttpServletRequest request,
-	@RequestBody String requestBody) {
+	@RequestBody String requestBody) throws InterruptedException {
 		RestTemplate restTemplate = new RestTemplate();
 
 		Request requestEntity = Request.builder()
@@ -58,8 +58,9 @@ public class RequestServerApplication {
 				.requestBody(requestBody)
 				.build();
 		System.out.println(requestEntity.toString());
-		requestJpa.save(requestEntity);
-
+		requestEntity = requestJpa.save(requestEntity);
+		Thread.sleep(1000);
+		responseService.findByRequestId(requestEntity.getId());
 		return "qwer";
 	}
 

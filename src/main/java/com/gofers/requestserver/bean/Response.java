@@ -23,6 +23,8 @@ public class Response {
 	@Id
 	@GeneratedValue
 	private int id;
+	@Column
+	private int requestId;
 
 	@Column
 	private String response;

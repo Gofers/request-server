@@ -1,11 +1,12 @@
 package com.gofers.requestserver.service;
 
 import com.gofers.requestserver.bean.Request;
+import com.gofers.requestserver.bean.Response;
 import com.gofers.requestserver.dao.RequestJpa;
 
+import com.gofers.requestserver.dao.ResponseJpa;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Example;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,8 @@ public class ResponseServiceImpl implements ResponseService {
 
 	@Autowired
 	RequestJpa requestJpa;
+	@Autowired
+	ResponseJpa responseJpa;
 	@Override
 	@Async
 	public void doPost() {
@@ -29,5 +32,13 @@ public class ResponseServiceImpl implements ResponseService {
 		System.out.println(url);
 		ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, request.getRequestBody(), String.class);
 		System.out.println(responseEntity.getBody());
+	}
+
+	@Override
+	public Response findByRequestId(int requestId) {
+		Response responseQuery=Response.builder().requestId(requestId).build();
+		Response response = responseJpa.findOne(Example.of(responseQuery)).get();
+		System.out.println(response);
+		return response;
 	}
 }
