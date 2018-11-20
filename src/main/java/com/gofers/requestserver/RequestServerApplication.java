@@ -40,7 +40,7 @@ public class RequestServerApplication {
 
 		Request requestEntity = Request.builder()
 				.path(request.getServletPath())
-				.method(RequestMethod.GET.name())
+				.method(RequestMethod.GET)
 				.requestBody(request.getQueryString())
 				.build();
 		requestJpa.save(requestEntity);
@@ -53,7 +53,7 @@ public class RequestServerApplication {
 		RestTemplate restTemplate = new RestTemplate();
 
 		Request requestEntity = Request.builder()
-				.method(RequestMethod.POST.name())
+				.method(RequestMethod.POST)
 				.path(request.getServletPath())
 				.requestBody(requestBody)
 				.build();
