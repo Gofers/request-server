@@ -36,9 +36,21 @@ public class ResponseServiceImpl implements ResponseService {
 
 	@Override
 	public Response findByRequestId(int requestId) {
-		Response responseQuery=Response.builder().requestId(requestId).build();
+		Response responseQuery=Response.builder()
+				.requestId(1)
+				.id(2)
+				.response("adsfasdf")
+				.build();
+		System.out.println(responseQuery);
 		Response response = responseJpa.findOne(Example.of(responseQuery)).get();
 		System.out.println(response);
 		return response;
+	}
+
+	@Override
+	public Response findById(int responseId) {
+		System.out.println(responseId);
+
+		return responseJpa.findById(responseId).get();
 	}
 }

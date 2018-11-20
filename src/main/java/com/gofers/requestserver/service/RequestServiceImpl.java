@@ -19,4 +19,11 @@ public class RequestServiceImpl implements RequestService {
 
 		return requestJpa.save(request).getId();
 	}
+
+	@Override
+	public Request findById(int requestId) {
+		return requestJpa.findById(requestId).get();
+	}
+
+
 }

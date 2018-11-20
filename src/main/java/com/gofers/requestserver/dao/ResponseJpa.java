@@ -9,4 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface ResponseJpa extends JpaRepository<Response, Integer> {
 
+    Response findByRequestId(int requestId);
+
 }

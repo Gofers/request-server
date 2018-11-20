@@ -16,4 +16,6 @@ public interface ResponseService {
 	 * @return
 	 */
 	Response findByRequestId(int requestId);
+
+    Response findById(int responseId);
 }

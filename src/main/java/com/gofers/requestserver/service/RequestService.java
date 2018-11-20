@@ -5,4 +5,6 @@ import com.gofers.requestserver.bean.Request;
 public interface RequestService {
 
 	int save(Request request);
+
+	Request findById(int requestId);
 }

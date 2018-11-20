@@ -4,6 +4,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.gofers.requestserver.bean.Request;
 import com.gofers.requestserver.dao.RequestJpa;
+import com.gofers.requestserver.dao.ResponseJpa;
+import com.gofers.requestserver.message.Sender;
+import com.gofers.requestserver.service.RequestService;
 import com.gofers.requestserver.service.ResponseService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.logging.Logger;
+
 /**
  * @author fangzongzhou
  */
@@ -24,6 +29,12 @@ public class RequestServerApplication {
 
 	@Autowired
 	RequestJpa requestJpa;
+	@Autowired
+	ResponseJpa responseJpa;
+	@Autowired
+	RequestService requestService;
+	@Autowired
+	private Sender sender;
 
 	public static void main(String[] args) {
 		SpringApplication.run(RequestServerApplication.class, args);
@@ -57,11 +68,27 @@ public class RequestServerApplication {
 				.path(request.getServletPath())
 				.requestBody(requestBody)
 				.build();
+		requestEntity=requestJpa.save(requestEntity);
+		sender.sendRequest(Request.builder()
+				.method(RequestMethod.POST)
+				.path(requestEntity.getPath())
+				.id(requestEntity.getId())
+				.requestBody(requestEntity.getRequestBody())
+				.build());
+
 		System.out.println(requestEntity.toString());
+
 		requestEntity = requestJpa.save(requestEntity);
 		Thread.sleep(1000);
-		responseService.findByRequestId(requestEntity.getId());
-		return "qwer";
+		int requestId=requestEntity.getId();
+		requestEntity = requestService.findById(requestId);
+		int responseId=requestEntity.getResponseId();
+		String resp = responseJpa.findByRequestId(requestId).getResponse();
+
+
+
+
+		return resp;
 	}
 
 	@Autowired

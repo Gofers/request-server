@@ -34,6 +34,8 @@ public class Request implements Serializable {
 	private RequestMethod method;
 	@Column
 	private String requestBody;
+	@Column
+	private int responseId;
 
 
 }
