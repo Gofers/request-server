@@ -42,7 +42,7 @@ public class RequestServerApplication {
 
 
 	@RequestMapping(method = RequestMethod.GET, path = "/**")
-	public String getRequest(HttpServletRequest request) {
+	public String getRequest(HttpServletRequest request) throws InterruptedException {
 		RestTemplate restTemplate = new RestTemplate();
 		System.out.println(request.getMethod());
 		System.out.println(request.getServletPath());
@@ -54,8 +54,25 @@ public class RequestServerApplication {
 				.method(RequestMethod.GET)
 				.requestBody(request.getQueryString())
 				.build();
-		requestJpa.save(requestEntity);
-		return "asdf";
+		requestEntity = requestJpa.save(requestEntity);
+		sender.sendRequest(Request.builder()
+				.method(RequestMethod.GET)
+				.path(requestEntity.getPath())
+				.id(requestEntity.getId())
+				.requestBody(requestEntity.getRequestBody())
+				.build());
+		requestEntity = requestJpa.save(requestEntity);
+		Thread.sleep(1000);
+		int requestId=requestEntity.getId();
+		requestEntity = requestService.findById(requestId);
+		int responseId=requestEntity.getResponseId();
+		String resp = responseJpa.findByRequestId(requestId).getResponse();
+
+
+
+
+		return resp;
+
 	}
 
 	@RequestMapping(method = RequestMethod.POST, path = "/**")
